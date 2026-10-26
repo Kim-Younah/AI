@@ -3,69 +3,2094 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AI Creative Agent</title>
-</head>
-<body>
-  <p id="status" role="status" aria-live="polite">채팅에 연결하는 중입니다...</p>
-  <div id="webchat" style="height: 600px"></div>
-  <script src="https://cdn.botframework.com/botframework-webchat/4.18.0/webchat.js"></script>
-  <script>
-    const BROKER_URL = "https://dl-broker-juwon-4jt3z.azurewebsites.net/api/directlineToken";
-    const SEALED = "OiSn8spgMHPMX2qtI00jfkQA6C0XUhBi8pEfUI9RwaIrJbpbvJn6dOLYOdjJdnDOAItGHpB4q4Db8IW-XD2u4d7I3CHzZRGPFJAs-6eOSZwfCrES0hcV9JJo2o7HPrSiqZo4It1Ka12Vd7NvtBrujyeQsSvFi1Z9tQXOrf7b7C16BVe3EKjCcfDk8NnDbY2kZwgzvGo7-Bdkh0c8KfOWZ50qHETOyXuuJ1yAkp2qRHrqVJPfSbyVuN1L4KImBKfndnHa4lxTsyV2Et_oBL_8l_W1ZIdyWj8UIMQg9Gz85ZdyVnI_4EX1DlVaCNIaNch354A194BAgQ_YOQ16qJZpRDUJVggQVemUTXTgRUj-iiW0N4QcLfdN2AH--AmckZL7YpTUqa5FGhOvGGUisS0r5CebzsMYku_lUOqrB27chzVqekNBiNjdv27yVMR4eo0K1grz92PhMoZYnukKzU2P48zU-852-ciH5zlDL3v76Nk0dhAD2CSYFn_oCXbN8BsJnyzGPdzcbFkQdIRkEtOq_z8Di0RS142k6nKOP6E0lavdZ9mSZB4ZkFG7eakm5S0JiXqHiHagd53NZ3ToRCjYPIt1XcSKGAPEG5UTsHs4SwGWKMPgbTHyaZv0GVN6I9u196jcvGxSBXAOdmS1f17nzQ";
-    const status = document.getElementById("status");
-
-    function showError(message) {
-      status.hidden = false;
-      status.textContent = message;
+  <meta name="theme-color" content="#F7F7FB">
+  <meta name="description" content="한 줄의 아이디어로 발표자료, 포스터, 제안서, 웹페이지, 예산 분석까지. Copilot Studio로 만든 AI Creative Agent Team.">
+  <title>AI Creative Agent Team — One idea, five deliverables.</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap">
+  <style>
+    /* 기본 토큰과 유리 재질 */
+    :root {
+      --ink: #14142B;
+      --muted: #6B6B80;
+      --line: rgba(20,20,43,.08);
+      --spring: cubic-bezier(.2,1.3,.3,1);
+      --brand: linear-gradient(120deg,#6E8BFF,#A77BFF 40%,#FF8AC8 70%,#FFB37A);
+      font-family: 'Pretendard Variable', -apple-system, sans-serif;
+      color: var(--ink);
+      background: #F7F7FB;
     }
 
-    async function connect() {
-      if (!window.WebChat ||
-          typeof WebChat.createDirectLine !== "function" ||
-          typeof WebChat.renderWebChat !== "function") {
-        showError("채팅 구성 요소를 불러오지 못했습니다. 네트워크를 확인한 뒤 새로고침해 주세요.");
-        return;
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      word-break: keep-all;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      pointer-events: none;
+      opacity: .04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.88' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23000' filter='url(%23n)' opacity='.6' d='M0 0h180v180H0z'/%3E%3C/svg%3E");
+    }
+
+    .glass {
+      background: rgba(255,255,255,.55);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      backdrop-filter: blur(24px) saturate(160%);
+      border: 1px solid rgba(255,255,255,.7);
+      box-shadow: 0 30px 80px -30px rgba(76,70,160,.25), inset 0 1px 1px #fff;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+      text-decoration: none;
+      font: 600 13px/1.2 'Pretendard Variable',sans-serif;
+      cursor: pointer;
+      transition: transform .35s var(--spring), box-shadow .35s;
+    }
+
+    .pill:hover { transform: translateY(-2px); }
+
+    .primary {
+      border: 0;
+      padding: 15px 23px;
+      color: #fff;
+      background: var(--ink);
+      box-shadow: 0 5px 12px rgba(20,20,43,.1);
+    }
+
+    .brand-mark {
+      flex: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--brand);
+      box-shadow: inset 0 1px 3px rgba(255,255,255,.8),0 3px 12px #a77bff40;
+    }
+
+    .nav {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      translate: -50% 0;
+      width: min(1080px,calc(100% - 24px));
+      height: 60px;
+      padding: 8px 9px 8px 19px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border-radius: 999px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 750;
+      letter-spacing: -.035em;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .nav-link {
+      color: #56566c;
+      font-size: 12px;
+      font-weight: 550;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover { color: #7259df; }
+    .nav-cta { padding: 14px 21px; }
+
+    .hero {
+      margin: 88px 12px 0;
+      border-radius: 36px;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 27px 28px 25px;
+      text-align: center;
+    }
+
+    /* 히어로·CTA 패널: 색이 패널을 가득 채우는 메시 그라데이션 */
+    .mesh { background: radial-gradient(circle at 16% 18%, #8EA2FF 0 14%, transparent 32%), radial-gradient(circle at 78% 9%, #FFB3D9 0 13%, transparent 30%), radial-gradient(circle at 66% 62%, #FFD3A8 0 16%, transparent 34%), radial-gradient(circle at 25% 74%, #9BE3FF 0 15%, transparent 32%), radial-gradient(circle at 50% 32%, #C4A5FF 0 16%, transparent 36%), linear-gradient(135deg, #fff, #F5F0FF 40%, #FFF7F0); }
+
+    .hero-blobs {
+      position: absolute;
+      inset: -5%;
+      z-index: -1;
+      overflow: hidden;
+      transform: translateY(var(--parallax,0px));
+    }
+
+    .blob {
+      position: absolute;
+      width: 70%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle,#C4A5FF 0, #C4A5FF00 66%);
+      animation: drift 26s ease-in-out infinite alternate;
+    }
+
+    .blob-one {
+      top: -40%;
+      left: -15%;
+      background: radial-gradient(circle,#8EA2FF 0,#8EA2FF00 66%);
+    }
+
+    .blob-two {
+      right: -20%;
+      top: 0;
+      background: radial-gradient(circle,#FFB3D9 0,#FFB3D900 66%);
+      animation-duration: 33s;
+      animation-delay: -10s;
+    }
+
+    .blob-three {
+      bottom: -60%;
+      left: 15%;
+      background: radial-gradient(circle,#9BE3FF 0,#9BE3FF00 66%);
+      animation-duration: 29s;
+    }
+
+    @keyframes drift {
+      to { transform: translate(9%,12%) scale(1.15); }
+    }
+
+    .hero-badge {
+      padding: 7px 12px;
+      font-size: 10px;
+      color: #4d426f;
+    }
+
+    .live-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #7c5bd5;
+    }
+
+    .eyebrow {
+      margin: 0 0 15px;
+      font: italic 29px/1.15 'Instrument Serif',serif;
+      letter-spacing: -.02em;
+      color: #8a75bc;
+    }
+
+    .hero-eyebrow {
+      margin: 12px 0 8px;
+      font-size: 25px;
+      color: #66508b;
+    }
+
+    .hero-title {
+      margin: 0;
+      font-size: clamp(40px,6vw,88px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -.055em;
+      text-wrap: balance;
+    }
+
+    .gradient-text {
+      background: linear-gradient(120deg,#4F6BFF,#8B5CF6 40%,#EC4899 70%,#FF7A45);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      margin: 15px auto 23px;
+      max-width: 560px;
+      color: #5d5677;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .chat-card {
+      width: min(860px,100%);
+      margin: 0 auto;
+      border-radius: 25px;
+      text-align: left;
+      overflow: hidden;
+      scroll-margin-top: 96px;
+    }
+
+    .window-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 49px;
+      padding: 0 17px;
+      border-bottom: 1px solid rgba(255,255,255,.45);
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 5px;
+      flex: none;
+    }
+
+    .window-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #a6a1bb;
+      opacity: .6;
+    }
+
+    .window-name {
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 11px;
+      font-weight: 650;
+      letter-spacing: -.01em;
+    }
+
+    .connection-dot {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      background: #a6a1bb;
+      border-radius: 50%;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+
+    .is-connected .connection-dot {
+      background: #33b387;
+      box-shadow: 0 0 0 3px #33b38712;
+    }
+
+    .new-chat {
+      padding: 6px 10px;
+      font-size: 10px;
+      box-shadow: inset 0 1px #fff;
+      color: #625c78;
+    }
+
+    .chat-foot { padding: 0 17px 12px; }
+
+    .examples {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 3px 0 10px;
+    }
+
+    .examples::-webkit-scrollbar { display: none; }
+
+    .example {
+      flex: none;
+      padding: 8px 11px;
+      font-size: 10px;
+      color: #625b7d;
+      background: #ffffff66;
+      border: 1px solid #ffffffa6;
+    }
+
+    .is-started .examples { display: none; }
+
+    .work-status {
+      display: none;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 2px 12px;
+      font-size: 11px;
+      color: #71678a;
+    }
+
+    .is-working .work-status { display: flex; }
+
+    .work-dots {
+      display: flex;
+      gap: 3px;
+    }
+
+    .work-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: #9976ea;
+      animation: twinkle 1.6s ease-in-out infinite;
+      animation-delay: calc(var(--i) * .16s);
+    }
+
+    @keyframes twinkle {
+      50% { opacity: .2; transform: translateY(-2px); }
+    }
+
+    .suggestions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 0;
+    }
+
+    .suggestions:not(:empty) { padding-bottom: 9px; }
+
+    .suggestion {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 8px 12px;
+      font-size: 11px;
+      color: #67528e;
+    }
+
+    .composer {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      padding: 9px 10px 9px 18px;
+      min-height: 60px;
+      border-radius: 30px;
+      background: rgba(255,255,255,.64);
+      border: 1px solid #ffffffd9;
+      box-shadow: inset 0 1px 1px #fff,0 8px 25px -15px #76619c40;
+      transition: transform .4s var(--spring),box-shadow .4s;
+    }
+
+    .composer:focus-within {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px -15px #76619c66, inset 0 1px #fff;
+    }
+
+    .chat-input {
+      resize: none;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: var(--ink);
+      width: 100%;
+      min-width: 0;
+      height: 40px;
+      max-height: 144px;
+      padding: 9px 0;
+      margin: 0;
+      font: 13px/22px 'Pretendard Variable',sans-serif;
+      scrollbar-width: thin;
+    }
+
+    .chat-input::placeholder { color: #9791a8; }
+
+    .send {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 0;
+      background: var(--ink);
+      color: white;
+      flex: none;
+      cursor: pointer;
+      font: 23px/1 sans-serif;
+      transition: opacity .2s,transform .3s var(--spring);
+    }
+
+    .send:hover { transform: translateY(-2px); }
+    .send:disabled { opacity: .25; cursor: default; }
+
+    .disclaimer {
+      margin: 8px 0 0;
+      text-align: center;
+      font-size: 9px;
+      color: #898297;
+      line-height: 1.5;
+    }
+
+    .error-panel {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 20px;
+      background: #ffffff80;
+      border: 1px solid #ffffffb3;
+    }
+
+    .is-error .error-panel { display: block; }
+    .is-error .composer { display: none; }
+
+    .error-title {
+      margin: 0 0 5px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .error-detail {
+      margin: 0 0 8px;
+      font: 10px/1.5 ui-monospace,monospace;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .retry { padding: 7px 11px; font-size: 10px; }
+
+    /* 작동 방식 궤도: 링만 돌고, 칩 글자는 늘 똑바로, 팀장은 가운데 고정 */
+    .orbit { --r: 150px; position: relative; width: calc(var(--r) * 2); aspect-ratio: 1; margin: 48px auto; }
+    .orbit-ring { position: absolute; inset: 0; border-radius: 50%; border: 1px dashed rgba(20,20,43,.16); animation: orbit-spin 40s linear infinite; }
+    .orbit .agent { position: absolute; left: 50%; top: 50%; transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a))); }
+    .orbit .agent b { position: absolute; translate: -50% -50%; white-space: nowrap; padding: 8px 12px; border-radius: 999px; font: 600 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: #5B4BC4; background: rgba(255,255,255,.8); border: 1px solid #fff; animation: orbit-spin 40s linear infinite reverse; }
+    .orbit .leader { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 112px; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; font-weight: 800; }
+    @keyframes orbit-spin { to { rotate: 360deg; } }
+    @media (max-width: 600px) { .orbit { --r: 100px; } .orbit .agent b { font-size: 10px; padding: 6px 9px; } .orbit .leader { width: 84px; } }
+
+    /* 대화창 카드 크기: 처음엔 작게, 첫 메시지를 보내면 화면 높이로 */
+    .chat-card { display: flex; flex-direction: column; }
+    .chat-card > * { flex: none; }
+    .chat-card > #webchat { height: 200px; min-height: 0; }
+    body.is-started .chat-card { height: calc(100svh - 112px); }
+    body.is-started .chat-card > #webchat { flex: 1 1 0; height: auto; min-height: 0; }
+
+    /* 작업 중 오로라 테두리 */
+    @property --aurora { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+    .composer::before { content: ""; position: absolute; inset: -1px; padding: 1.5px; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .6s; background: conic-gradient(from var(--aurora), #a5b4fc, #f0abfc, #fda4af, #fcd34d, #86efac, #67e8f9, #a5b4fc); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: aurora 6s linear infinite; }
+    body.is-working .composer::before { opacity: .8; }
+    @keyframes aurora { to { --aurora: 360deg; } }
+
+    /* Web Chat 기본 요소 정리 + 첨부 파일 카드 */
+    #webchat .webchat__typing-indicator { display: none !important; }
+    #webchat .webchat__stacked-layout:not(.webchat__stacked-layout--from-user) .webchat__stacked-layout__status { display: none; }
+    #webchat .webchat__stacked-layout__attachment-row { margin-top: 8px !important; }
+    #webchat .webchat__stacked-layout__attachment, #webchat .webchat__stacked-layout__attachment .webchat__bubble__content { background: none !important; border: 0 !important; overflow: visible !important; }
+    #webchat .webchat__stacked-layout__content:has(.webchat__fileContent) { overflow: visible !important; }
+    #webchat .webchat__fileContent { padding: 0 !important; }
+    #webchat .webchat__fileContent__buttonLink { display: flex !important; align-items: center; gap: 12px; height: 56px; padding: 0 18px 0 12px; border-radius: 18px; text-decoration: none; color: #14142B; background: rgba(255,255,255,.72); -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%); border: 1px solid rgba(255,255,255,.8); box-shadow: 0 10px 24px -16px rgba(76,70,160,.3), inset 0 1px 1px #fff; }
+    #webchat .webchat__fileContent__buttonLink::before { content: "FILE"; flex: none; padding: 5px 8px; border-radius: 999px; background: linear-gradient(120deg, #EEF0FF, #FBEFFF); color: #5B4BC4; font: 600 10.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .04em; }
+    #webchat a[download$=".pptx" i]::before { content: "PPTX"; } #webchat a[download$=".docx" i]::before { content: "DOCX"; } #webchat a[download$=".xlsx" i]::before { content: "XLSX"; } #webchat a[download$=".html" i]::before { content: "HTML"; }
+    #webchat .webchat__fileContent__badge { flex: 1; min-width: 0; background: none !important; padding: 0 !important; }
+    #webchat .webchat__fileContent__fileName { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace !important; color: #14142B !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    #webchat .webchat__fileContent__downloadIcon { flex: none; box-sizing: content-box; width: 16px; height: 16px; padding: 0; fill: #6B6B80; color: #6B6B80; }
+
+    /* 에이전트 답의 한글 줄바꿈과 마크다운 표 */
+    #webchat .webchat__render-markdown { word-break: keep-all; overflow-wrap: anywhere; line-height: 1.7; }
+    #webchat .webchat__render-markdown table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; border-spacing: 0; margin: 12px 0; font-variant-numeric: tabular-nums; }
+    #webchat .webchat__render-markdown th, #webchat .webchat__render-markdown td { padding: 9px 18px 9px 0; border-bottom: 1px solid rgba(20,20,43,.08); white-space: nowrap; }
+    #webchat .webchat__render-markdown th { font-size: 12px; font-weight: 600; color: #6B6B80; }
+    #webchat .webchat__avatar, #webchat .webchat__stacked-layout__speaker { display: none !important; }
+
+    /* 제품 소개 */
+    .logo-strip {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 26px;
+      padding: 30px 20px;
+      color: #a09eaf;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -.02em;
+    }
+
+    .logo-item { white-space: nowrap; }
+
+    .stats {
+      width: min(1000px,calc(100% - 48px));
+      margin: 22px auto 0;
+      padding: 25px 0 37px;
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stat {
+      text-align: center;
+      border-right: 1px solid var(--line);
+    }
+
+    .stat:last-child { border: 0; }
+
+    .stat-number {
+      font-size: 40px;
+      font-weight: 650;
+      letter-spacing: -.06em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-unit {
+      font-size: 16px;
+      font-weight: 550;
+      margin-left: 4px;
+    }
+
+    .stat-label {
+      margin: 8px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .section {
+      width: min(1120px,calc(100% - 48px));
+      margin: 0 auto;
+      padding: 100px 0;
+      scroll-margin-top: 96px;
+    }
+
+    .section-head {
+      margin-bottom: 42px;
+      text-align: center;
+    }
+
+    .section-title {
+      font-size: clamp(32px,4.2vw,56px);
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      text-wrap: balance;
+      margin: 0;
+    }
+
+    .bento {
+      display: grid;
+      grid-template-columns: repeat(6,minmax(0,1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      grid-column: span 2;
+      border-radius: 27px;
+      overflow: hidden;
+      padding: 25px;
+      min-width: 0;
+      background-color: rgba(255,255,255,.5);
+      box-shadow: inset 0 1px #fff,0 12px 35px -28px #77669970;
+    }
+
+    .feature-wide { grid-column: span 3; }
+
+    .feature-visual {
+      height: 186px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      margin: -25px -25px 24px;
+      overflow: hidden;
+      background: radial-gradient(ellipse at 50% 85%,#e5dfff80,transparent 75%);
+    }
+
+    .feature-title {
+      font-size: 21px;
+      letter-spacing: -.04em;
+      font-weight: 750;
+      margin: 0 0 9px;
+    }
+
+    .feature-desc {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+      margin: 0 0 21px;
+      min-height: 44px;
+    }
+
+    .filename {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font: 10px/1.4 ui-monospace,SFMono-Regular,monospace;
+      color: #888397;
+    }
+
+    .file-dot {
+      width: 5px;
+      height: 5px;
+      background: #b6a6eb;
+      border-radius: 50%;
+    }
+
+    .slides {
+      position: relative;
+      width: 210px;
+      height: 130px;
+      perspective: 600px;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 20px;
+      border: 1px solid white;
+      border-radius: 9px;
+      background: #f9f8ff;
+      box-shadow: 0 14px 26px -14px #61549170;
+      transition: transform .7s var(--spring);
+      transform: rotate(-10deg) translate(-28px,12px);
+    }
+
+    .slide-two {
+      transform: rotate(8deg) translate(24px,9px);
+      background: #e5ddff;
+    }
+
+    .slide-front {
+      transform: rotate(-3deg);
+      background: linear-gradient(130deg,#b9b5ff,#e2c4f2 60%,#ffd9c7);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .mini-overline {
+      font-size: 7px;
+      font-weight: 650;
+      letter-spacing: .12em;
+      opacity: .6;
+    }
+
+    .slide-heading {
+      font-size: 20px;
+      font-weight: 750;
+      line-height: 1.1;
+      letter-spacing: -.04em;
+    }
+
+    .slide-bottom { font-size: 6px; opacity: .5; }
+
+    .feature-card:hover .slide {
+      transform: rotate(-17deg) translate(-43px,11px);
+    }
+
+    .feature-card:hover .slide-two {
+      transform: rotate(17deg) translate(43px,9px);
+    }
+
+    .feature-card:hover .slide-front {
+      transform: rotate(-1deg) translateY(-5px);
+    }
+
+    .poster {
+      width: 122px;
+      height: 160px;
+      padding: 15px 13px;
+      color: #fff;
+      background: radial-gradient(circle at 80% 70%,#ffb975 0,transparent 45%),linear-gradient(150deg,#5231cc,#c24acb 60%,#ef8aa4);
+      border-radius: 5px;
+      box-shadow: 0 18px 35px -16px #a074bc99;
+      transform: rotate(6deg) translateY(7px);
+      transition: transform .7s var(--spring);
+      position: relative;
+    }
+
+    .poster-title {
+      display: block;
+      margin-top: 17px;
+      font: italic 34px/.88 'Instrument Serif',serif;
+      letter-spacing: -.04em;
+    }
+
+    .poster-small {
+      display: block;
+      margin-top: 22px;
+      font-size: 5px;
+      letter-spacing: .12em;
+    }
+
+    .poster-orb {
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      right: 12px;
+      bottom: 17px;
+      border-radius: 50%;
+      background: #ffffff22;
+      border: 1px solid #ffffff66;
+      box-shadow: inset 1px 2px 4px #ffffff66;
+    }
+
+    .feature-card:hover .poster {
+      transform: rotate(0) translateY(0);
+    }
+
+    .document {
+      width: 117px;
+      height: 151px;
+      background: #fff;
+      border-radius: 4px;
+      padding: 0 13px 12px;
+      box-shadow: 0 12px 24px #8e7dad30;
+      transform: rotate(-5deg) translateY(8px);
+      transition: transform .7s var(--spring);
+    }
+
+    .document-band {
+      height: 47px;
+      margin: 0 -13px 12px;
+      background: linear-gradient(120deg,#a9c5ff,#c9b9f2);
+      border-radius: 4px 4px 0 0;
+      padding: 12px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .document-title {
+      font-size: 8px;
+      font-weight: 750;
+      margin-bottom: 8px;
+    }
+
+    .document-line {
+      height: 3px;
+      margin: 5px 0;
+      border-radius: 2px;
+      background: #eae9f0;
+    }
+
+    .document-line-short { width: 65%; }
+
+    .feature-card:hover .document {
+      transform: rotate(0) translateY(0);
+    }
+
+    .browser {
+      width: 230px;
+      height: 140px;
+      background: #fff;
+      border: 1px solid #fff;
+      border-radius: 8px;
+      box-shadow: 0 16px 25px -16px #8e7dad70;
+      transform: rotate(4deg);
+      transition: transform .7s var(--spring);
+      overflow: hidden;
+    }
+
+    .browser-bar {
+      height: 20px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 0 8px;
+      background: #f5f4fb;
+    }
+
+    .browser-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #c6c2d5;
+    }
+
+    .browser-body {
+      padding: 12px;
+      background: linear-gradient(120deg,#e1ddff,#fbe3ee);
+    }
+
+    .browser-nav {
+      height: 10px;
+      border-radius: 9px;
+      background: #ffffffb3;
+      margin-bottom: 12px;
+    }
+
+    .browser-heading {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: -.05em;
+    }
+
+    .browser-button {
+      width: 40px;
+      padding: 4px;
+      font-size: 5px;
+      color: #fff;
+      border-radius: 20px;
+      background: #63579b;
+      margin: 7px 0;
+      text-align: center;
+    }
+
+    .browser-cards {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 5px;
+    }
+
+    .browser-tile {
+      height: 26px;
+      border-radius: 5px;
+      background: #ffffff99;
+    }
+
+    .feature-card:hover .browser {
+      transform: rotate(0) translateY(-5px);
+    }
+
+    .budget {
+      background: #ffffffb3;
+      width: 225px;
+      padding: 15px;
+      border: 1px solid white;
+      border-radius: 12px;
+      box-shadow: 0 14px 30px -20px #8e7dad80;
+    }
+
+    .budget-label { font-size: 6px; color: var(--muted); }
+
+    .budget-total {
+      font-size: 23px;
+      letter-spacing: -.04em;
+      font-weight: 700;
+      margin: 5px 0 10px;
+    }
+
+    .bars {
+      height: 56px;
+      display: flex;
+      align-items: flex-end;
+      gap: 9px;
+      border-bottom: 1px solid #e9e5f1;
+    }
+
+    .bar {
+      flex: 1;
+      height: var(--h);
+      transform: scaleY(.06);
+      transform-origin: bottom;
+      border-radius: 4px 4px 0 0;
+      background: linear-gradient(#c7bbff,#e3dcff);
+      transition: transform 1.2s var(--spring);
+      transition-delay: calc(var(--i) * 80ms);
+    }
+
+    .is-chart-visible .bar { transform: scaleY(1); }
+    .bar:last-child { background: linear-gradient(#ffc0d8,#ffdfda); }
+
+    .how-section { padding-top: 20px; }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 70px;
+    }
+
+    .orbit-card {
+      border-radius: 32px;
+      padding: 28px 10px;
+      overflow: hidden;
+      background: radial-gradient(circle,#e8e1ffb3,#f4effa66 70%);
+      position: relative;
+    }
+
+    .orbit-card::before {
+      content: '';
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border: 1px solid #fff;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      translate: -50% -50%;
+    }
+
+    .leader {
+      background: radial-gradient(circle at 30% 20%,#ffffffdd,#ddd0ff99 65%,#bca1ff88);
+      border: 1px solid #fff;
+      color: #6d4dbc;
+      box-shadow: inset 0 2px 8px white,0 12px 40px #a999d440;
+      font-size: 18px;
+    }
+
+    .steps { display: grid; gap: 23px; }
+
+    .step {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 15px;
+    }
+
+    .step-number {
+      color: #a49abf;
+      border: 1px solid #ddd7ea;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      font: 11px ui-monospace,monospace;
+    }
+
+    .step-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 1px 0 7px;
+      letter-spacing: -.03em;
+    }
+
+    .step-desc {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 340px;
+    }
+
+    .design-band {
+      padding: 85px 24px 80px;
+      background: linear-gradient(115deg,#5B3DF5,#b044dc 40%,#FF4FA3 72%,#FF9F45);
+      color: #fff;
+      overflow: hidden;
+      scroll-margin-top: 96px;
+      position: relative;
+    }
+
+    .design-inner {
+      width: min(1120px,100%);
+      margin: auto;
+    }
+
+    .design-eyebrow { color: #ffffffb3; }
+
+    .design-subtitle {
+      font-size: 14px;
+      margin: 20px 0 0;
+      color: #ffffffb3;
+      line-height: 1.7;
+    }
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(5,minmax(0,1fr));
+      gap: 12px;
+    }
+
+    .theme-card {
+      background: #ffffff12;
+      border: 1px solid #ffffff35;
+      border-radius: 20px;
+      padding: 23px 20px;
+      box-shadow: inset 0 1px #ffffff20;
+      -webkit-backdrop-filter: blur(24px);
+      backdrop-filter: blur(24px);
+    }
+
+    .swatches {
+      display: flex;
+      padding-left: 2px;
+      margin-bottom: 26px;
+    }
+
+    .swatch {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--swatch);
+      border: 1px solid #ffffff60;
+      box-shadow: inset 1px 2px 3px #ffffff50,0 4px 8px #3c226222;
+    }
+
+    .swatch + .swatch { margin-left: -8px; }
+
+    .theme-name {
+      font-size: 16px;
+      margin: 0 0 6px;
+      font-weight: 650;
+    }
+
+    .theme-use {
+      font-size: 11px;
+      margin: 0;
+      color: #ffffffad;
+      line-height: 1.5;
+    }
+
+    .prompts-section {
+      padding: 98px 0 90px;
+      overflow: hidden;
+    }
+
+    .prompt-heading { padding: 0 24px; }
+
+    .marquee {
+      overflow: hidden;
+      padding: 7px 0;
+      mask-image: linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 12px;
+      width: max-content;
+      animation: marquee 45s linear infinite;
+    }
+
+    .marquee-reverse {
+      animation-direction: reverse;
+      animation-duration: 50s;
+    }
+
+    .marquee:hover .marquee-track,
+    .marquee:focus-within .marquee-track {
+      animation-play-state: paused;
+    }
+
+    .prompt-chip {
+      padding: 16px 24px;
+      color: #767089;
+      font-size: 14px;
+      box-shadow: inset 0 1px white,0 6px 14px -10px #8f78ad70;
+    }
+
+    .prompt-chip::before {
+      content: '✳';
+      color: #baa8e4;
+      font-size: 15px;
+      margin-right: 3px;
+    }
+
+    @keyframes marquee {
+      to { transform: translateX(calc(-50% - 6px)); }
+    }
+
+    .cta {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      margin: 0 12px;
+      padding: 96px 24px;
+      border-radius: 36px;
+      text-align: center;
+    }
+
+    .cta-eyebrow {
+      color: #7b629a;
+      font-size: 33px;
+    }
+
+    .cta-title {
+      font-size: clamp(40px,6vw,88px);
+      font-weight: 800;
+      letter-spacing: -.05em;
+      line-height: 1.1;
+      margin: 0 0 30px;
+      text-wrap: balance;
+    }
+
+    .cta-button { padding: 18px 28px; }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      max-width: 1120px;
+      margin: auto;
+      padding: 32px 24px;
+      font-size: 10px;
+      color: #9994a6;
+    }
+
+    .footer-brand { font-weight: 700; color: #696378; }
+
+    .floating-notice {
+      display: none;
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 80;
+      padding: 15px 20px;
+      font-size: 12px;
+      color: #695385;
+    }
+
+    .floating-notice.is-visible { display: inline-flex; }
+
+    .reveal-pending {
+      opacity: 0;
+      transform: translateY(25px);
+      filter: blur(6px);
+    }
+
+    .reveal-ready {
+      transition: opacity .85s ease,transform .85s var(--spring),filter .85s ease;
+      transition-delay: var(--delay,0ms);
+    }
+
+    .pill:focus-visible,
+    .send:focus-visible,
+    .nav-link:focus-visible,
+    .nav-brand:focus-visible {
+      outline: 2px solid #7555cc;
+      outline-offset: 4px;
+    }
+
+    @media (max-width: 900px) {
+      .nav-links { gap: 20px; }
+      .hero-title { font-size: clamp(40px,6vw,66px); }
+      .how-grid { gap: 30px; }
+      .feature-card { padding: 22px; }
+      .feature-visual { margin: -22px -22px 22px; }
+      .theme-card { padding: 20px 13px; }
+      .feature-title { font-size: 18px; }
+    }
+
+    @media (max-width: 600px) {
+      .nav {
+        top: 12px;
+        height: 54px;
+        gap: 8px;
+        padding: 7px 7px 7px 13px;
       }
 
-      let response;
+      .nav-links { display: none; }
+
+      .nav-brand {
+        font-size: 11px;
+        gap: 6px;
+        letter-spacing: -.045em;
+      }
+
+      .brand-mark { width: 22px; height: 22px; }
+      .nav-cta { font-size: 10px; padding: 12px 13px; }
+
+      .hero {
+        margin-top: 78px;
+        padding: 22px 13px 18px;
+        border-radius: 28px;
+      }
+
+      .hero-badge { font-size: 9px; padding: 6px 10px; }
+      .hero-eyebrow { font-size: 23px; margin: 12px 0 10px; }
+      .hero-title { font-size: 40px; letter-spacing: -.055em; }
+      .hero-title-line { display: block; }
+
+      .hero-subtitle {
+        font-size: 12px;
+        max-width: 290px;
+        margin: 12px auto 18px;
+        line-height: 1.6;
+      }
+
+      .chat-card { border-radius: 20px; }
+      .window-bar { padding: 0 12px; gap: 8px; height: 42px; }
+      .window-name { font-size: 10px; }
+      .window-dots { gap: 3px; }
+      .window-dot { width: 4px; height: 4px; }
+      .new-chat { font-size: 9px; padding: 5px 8px; }
+      .chat-foot { padding: 0 10px 10px; }
+      .example { font-size: 9px; padding: 7px 9px; }
+      .composer { padding-left: 13px; min-height: 56px; }
+      .chat-input { font-size: 12px; height: 36px; padding: 7px 0; }
+      .send { width: 36px; height: 36px; }
+      .disclaimer { font-size: 8px; margin-top: 7px; }
+      .work-status { font-size: 10px; gap: 6px; }
+
+      .logo-strip {
+        gap: 13px 19px;
+        font-size: 9px;
+        padding: 24px 30px;
+      }
+
+      .stats {
+        width: calc(100% - 36px);
+        margin-top: 4px;
+        padding: 15px 0 28px;
+      }
+
+      .stat-number { font-size: 30px; }
+      .stat-unit { font-size: 11px; margin-left: 2px; }
+      .stat-label { font-size: 9px; margin-top: 6px; }
+      .section { width: calc(100% - 32px); padding: 70px 0; }
+      .section-head { margin-bottom: 30px; }
+      .eyebrow { font-size: 27px; margin-bottom: 12px; }
+      .section-title { font-size: 32px; }
+      .bento { grid-template-columns: 1fr; gap: 13px; }
+
+      .feature-card,
+      .feature-wide {
+        grid-column: auto;
+        padding: 25px;
+      }
+
+      .feature-visual { margin: -25px -25px 20px; height: 185px; }
+      .feature-title { font-size: 22px; }
+      .feature-desc { min-height: 0; margin-bottom: 18px; }
+      .how-section { padding-top: 10px; }
+      .how-grid { grid-template-columns: 1fr; gap: 30px; }
+      .orbit-card { padding: 12px 10px; }
+      .steps { padding: 0 12px; }
+      .step-desc { font-size: 12px; }
+      .design-band { padding: 65px 16px; }
+      .design-subtitle { font-size: 12px; }
+
+      .theme-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 9px;
+      }
+
+      .theme-card { padding: 20px; }
+
+      .theme-card:last-child {
+        grid-column: span 2;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .theme-card:last-child .swatches { margin-bottom: 0; }
+      .swatches { margin-bottom: 18px; }
+      .prompts-section { padding: 65px 0; }
+      .prompt-chip { font-size: 12px; padding: 13px 19px; }
+      .cta { padding: 75px 20px; border-radius: 28px; }
+      .cta-title { font-size: 42px; }
+
+      .footer {
+        padding: 28px 24px;
+        gap: 12px;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .floating-notice {
+        right: 16px;
+        bottom: 16px;
+        font-size: 11px;
+        padding: 13px 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .hero-blobs { transform: none; }
+      .reveal-pending { opacity: 1; filter: none; transform: none; }
+      .bar { transform: scaleY(1); }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav glass" aria-label="주 메뉴">
+    <a class="nav-brand" href="#" data-chat>
+      <span class="brand-mark" aria-hidden="true"></span>
+      AI Creative Agent Team
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="#features">기능</a>
+      <a class="nav-link" href="#how">작동 방식</a>
+      <a class="nav-link" href="#design">디자인</a>
+    </div>
+    <button class="pill primary nav-cta" type="button" data-chat>
+      지금 써 보기 <span aria-hidden="true">↗</span>
+    </button>
+  </nav>
+
+  <main class="main">
+    <header class="hero mesh">
+      <div class="hero-blobs" aria-hidden="true">
+        <div class="blob blob-one"></div>
+        <div class="blob blob-two"></div>
+        <div class="blob blob-three"></div>
+      </div>
+
+      <div class="pill glass hero-badge">
+        <span class="live-dot"></span>
+        Copilot Studio 멀티 에이전트
+      </div>
+
+      <p class="eyebrow hero-eyebrow">One idea, five deliverables.</p>
+
+      <h1 class="hero-title">
+        <span class="hero-title-line">한 줄의 아이디어,</span>
+        <span class="hero-title-line gradient-text">다섯 개의 결과물.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        팀장 에이전트가 전문가 다섯에게 일을 나눠,<br>
+        발표자료부터 예산 분석까지 한 번에 만들어 드려요.
+      </p>
+
+      <section class="chat-card glass" aria-label="AI Creative Agent Team과 대화">
+        <div class="window-bar">
+          <div class="window-dots" aria-hidden="true">
+            <span class="window-dot"></span>
+            <span class="window-dot"></span>
+            <span class="window-dot"></span>
+          </div>
+          <div class="window-name">
+            AI Creative Agent Team
+            <span class="connection-dot" role="img" aria-label="연결 중"></span>
+          </div>
+          <button class="pill glass new-chat" type="button">
+            새 대화 <span aria-hidden="true">↻</span>
+          </button>
+        </div>
+
+        <div id="webchat" role="region" aria-label="대화 내용"></div>
+
+        <div class="chat-foot">
+          <div class="examples" aria-label="예시 요청">
+            <button class="pill example" type="button" data-example>가을 학교 축제 기획해 줘</button>
+            <button class="pill example" type="button" data-example>탄소중립 캠페인 홍보물 만들어 줘</button>
+            <button class="pill example" type="button" data-example>교사 AI 연수 프로그램 제안해 줘</button>
+          </div>
+
+          <div class="work-status" role="status">
+            <div class="work-dots" aria-hidden="true">
+              <span class="work-dot" style="--i:0"></span>
+              <span class="work-dot" style="--i:1"></span>
+              <span class="work-dot" style="--i:2"></span>
+              <span class="work-dot" style="--i:3"></span>
+              <span class="work-dot" style="--i:4"></span>
+            </div>
+            <span class="work-label">팀이 작업 중 · 0:00</span>
+          </div>
+
+          <div class="suggestions" aria-label="제안된 응답"></div>
+
+          <form class="composer" aria-label="메시지 보내기">
+            <textarea
+              class="chat-input"
+              rows="1"
+              aria-label="팀에게 요청할 내용"
+              placeholder="팀을 부르는 중…"
+              disabled
+            ></textarea>
+            <button class="send" type="submit" aria-label="메시지 보내기" disabled>↑</button>
+          </form>
+
+          <div class="error-panel" role="status">
+            <p class="error-title">지금은 팀과 연결할 수 없어요</p>
+            <p class="error-detail"></p>
+            <button class="pill primary retry" type="button">다시 시도 ↻</button>
+          </div>
+
+          <p class="disclaimer">AI는 실수할 수 있어요. 중요한 내용은 확인하세요.</p>
+        </div>
+      </section>
+    </header>
+
+    <div class="logo-strip" aria-label="함께하는 도구">
+      <span class="logo-item">Microsoft Copilot Studio</span>
+      <span class="logo-item">Claude Opus 5.5</span>
+      <span class="logo-item">PowerPoint</span>
+      <span class="logo-item">Word</span>
+      <span class="logo-item">Excel</span>
+      <span class="logo-item">HTML</span>
+    </div>
+
+    <div class="stats" data-reveal>
+      <div class="stat">
+        <span class="stat-number" data-count="1">1</span><span class="stat-unit">번</span>
+        <p class="stat-label">의 요청</p>
+      </div>
+      <div class="stat">
+        <span class="stat-number" data-count="6">6</span><span class="stat-unit">명</span>
+        <p class="stat-label">의 에이전트</p>
+      </div>
+      <div class="stat">
+        <span class="stat-number" data-count="7">7</span><span class="stat-unit">개</span>
+        <p class="stat-label">의 작업 매뉴얼</p>
+      </div>
+      <div class="stat">
+        <span class="stat-number" data-count="5">5</span><span class="stat-unit">개</span>
+        <p class="stat-label">의 파일</p>
+      </div>
+    </div>
+
+    <section class="section" id="features">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Five deliverables.</p>
+        <h2 class="section-title">한 번의 요청으로 받는<br>다섯 가지</h2>
+      </div>
+
+      <div class="bento">
+        <article class="feature-card feature-wide glass" data-reveal>
+          <div class="feature-visual" aria-hidden="true">
+            <div class="slides">
+              <div class="slide">
+                <div class="document-line"></div>
+                <div class="document-line document-line-short"></div>
+              </div>
+              <div class="slide slide-two">
+                <div class="document-line"></div>
+              </div>
+              <div class="slide slide-front">
+                <span class="mini-overline">CREATIVE DIRECTION / 01</span>
+                <div class="slide-heading">Ideas worth<br>sharing.</div>
+                <span class="slide-bottom">AUTUMN FESTIVAL 2026 ───</span>
+              </div>
+            </div>
+          </div>
+          <h3 class="feature-title">말할 거리가 정리된 10장</h3>
+          <p class="feature-desc">10장 내외 슬라이드와 발표자 노트까지</p>
+          <div class="filename"><span class="file-dot"></span>presentation.pptx</div>
+        </article>
+
+        <article class="feature-card feature-wide glass" data-reveal>
+          <div class="feature-visual" aria-hidden="true">
+            <div class="poster">
+              <span class="mini-overline">MAKE SOMETHING</span>
+              <span class="poster-title">A little<br>more<br>wonder.</span>
+              <span class="poster-small">AUTUMN FESTIVAL · 2026</span>
+              <div class="poster-orb"></div>
+            </div>
+          </div>
+          <h3 class="feature-title">걸어 두고 싶은 한 장</h3>
+          <p class="feature-desc">브라우저에서 바로 여는 유리 질감 포스터, 인쇄·PDF 저장도</p>
+          <div class="filename"><span class="file-dot"></span>poster.html</div>
+        </article>
+
+        <article class="feature-card glass" data-reveal>
+          <div class="feature-visual" aria-hidden="true">
+            <div class="document">
+              <div class="document-band">PROJECT<br>PROPOSAL</div>
+              <div class="document-title">좋은 아이디어의 시작.</div>
+              <div class="document-line"></div>
+              <div class="document-line"></div>
+              <div class="document-line document-line-short"></div>
+              <div class="document-line"></div>
+              <div class="document-line"></div>
+              <div class="document-line document-line-short"></div>
+            </div>
+          </div>
+          <h3 class="feature-title">바로 보낼 수 있는 제안서</h3>
+          <p class="feature-desc">테마 색 표지와 읽기 좋은 흰 본문</p>
+          <div class="filename"><span class="file-dot"></span>proposal.docx</div>
+        </article>
+
+        <article class="feature-card glass" data-reveal>
+          <div class="feature-visual" aria-hidden="true">
+            <div class="browser">
+              <div class="browser-bar">
+                <span class="browser-dot"></span>
+                <span class="browser-dot"></span>
+                <span class="browser-dot"></span>
+              </div>
+              <div class="browser-body">
+                <div class="browser-nav"></div>
+                <div class="browser-heading">Meet your next idea.</div>
+                <div class="browser-button">JOIN US ↗</div>
+                <div class="browser-cards">
+                  <div class="browser-tile"></div>
+                  <div class="browser-tile"></div>
+                  <div class="browser-tile"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <h3 class="feature-title">신청까지 받는 랜딩</h3>
+          <p class="feature-desc">유리 메뉴 바와 카드로 만든 소개·신청 페이지</p>
+          <div class="filename"><span class="file-dot"></span>webpage.html</div>
+        </article>
+
+        <article class="feature-card glass" data-reveal>
+          <div class="feature-visual" aria-hidden="true">
+            <div class="budget">
+              <div class="budget-label">TOTAL BUDGET · KRW</div>
+              <div class="budget-total">₩12,400,000</div>
+              <div class="bars">
+                <div class="bar" style="--h:45%;--i:0"></div>
+                <div class="bar" style="--h:72%;--i:1"></div>
+                <div class="bar" style="--h:55%;--i:2"></div>
+                <div class="bar" style="--h:95%;--i:3"></div>
+                <div class="bar" style="--h:65%;--i:4"></div>
+                <div class="bar" style="--h:82%;--i:5"></div>
+              </div>
+            </div>
+          </div>
+          <h3 class="feature-title">숫자가 맞는 예산</h3>
+          <p class="feature-desc">숫자 카드와 차트, 합계는 수식으로</p>
+          <div class="filename"><span class="file-dot"></span>budget_analysis.xlsx</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section how-section" id="how">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">How the team works.</p>
+        <h2 class="section-title">팀장 하나, 전문가 다섯,<br>매뉴얼 일곱.</h2>
+      </div>
+
+      <div class="how-grid">
+        <div class="orbit-card glass" data-reveal aria-label="팀장 주위로 다섯 전문가 에이전트가 협업합니다">
+          <div class="orbit"><div class="orbit-ring"><span class="agent" style="--a:0deg"><b>ppt-agent</b></span><span class="agent" style="--a:72deg"><b>poster-agent</b></span><span class="agent" style="--a:144deg"><b>proposal-agent</b></span><span class="agent" style="--a:216deg"><b>webpage-agent</b></span><span class="agent" style="--a:288deg"><b>budget-agent</b></span></div><div class="leader">팀장</div></div>
+        </div>
+
+        <div class="steps">
+          <div class="step" data-reveal>
+            <span class="step-number">01</span>
+            <div>
+              <h3 class="step-title">브리프</h3>
+              <p class="step-desc">요청을 한 장짜리 기획서로 정리하고 컬러 테마를 정해요.</p>
+            </div>
+          </div>
+          <div class="step" data-reveal>
+            <span class="step-number">02</span>
+            <div>
+              <h3 class="step-title">예산 먼저</h3>
+              <p class="step-desc">budget-agent가 예산 기준표로 모든 금액의 기준을 잡아요.</p>
+            </div>
+          </div>
+          <div class="step" data-reveal>
+            <span class="step-number">03</span>
+            <div>
+              <h3 class="step-title">원고</h3>
+              <p class="step-desc">전문가들이 같은 브리프로 각자 원고를 써요.</p>
+            </div>
+          </div>
+          <div class="step" data-reveal>
+            <span class="step-number">04</span>
+            <div>
+              <h3 class="step-title">파일 5개</h3>
+              <p class="step-desc">디자인 규칙에 맞춰 파일을 만들어 한 번에 첨부해요.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="design-band" id="design">
+      <div class="design-inner">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow design-eyebrow">One design language.</p>
+          <h2 class="section-title">다섯 파일,<br>하나의 리퀴드 글래스.</h2>
+          <p class="design-subtitle">재질과 레이아웃은 늘 같고, 색만 주제에 맞게 바뀝니다.</p>
+        </div>
+
+        <div class="theme-grid">
+          <div class="theme-card" data-reveal>
+            <div class="swatches" aria-hidden="true">
+              <span class="swatch" style="--swatch:#A8D8FF"></span>
+              <span class="swatch" style="--swatch:#007AFF"></span>
+            </div>
+            <div>
+              <h3 class="theme-name">스카이</h3>
+              <p class="theme-use">교육·일반 행사</p>
+            </div>
+          </div>
+
+          <div class="theme-card" data-reveal>
+            <div class="swatches" aria-hidden="true">
+              <span class="swatch" style="--swatch:#1EC8FF"></span>
+              <span class="swatch" style="--swatch:#FF2E93"></span>
+            </div>
+            <div>
+              <h3 class="theme-name">팝</h3>
+              <p class="theme-use">IT 캠페인·축제</p>
+            </div>
+          </div>
+
+          <div class="theme-card" data-reveal>
+            <div class="swatches" aria-hidden="true">
+              <span class="swatch" style="--swatch:#0B1628"></span>
+              <span class="swatch" style="--swatch:#6EA8FF"></span>
+            </div>
+            <div>
+              <h3 class="theme-name">네이비</h3>
+              <p class="theme-use">공공 보고서·정책</p>
+            </div>
+          </div>
+
+          <div class="theme-card" data-reveal>
+            <div class="swatches" aria-hidden="true">
+              <span class="swatch" style="--swatch:#A8E3C4"></span>
+              <span class="swatch" style="--swatch:#12A150"></span>
+            </div>
+            <div>
+              <h3 class="theme-name">그린</h3>
+              <p class="theme-use">환경·ESG</p>
+            </div>
+          </div>
+
+          <div class="theme-card" data-reveal>
+            <div class="swatches" aria-hidden="true">
+              <span class="swatch" style="--swatch:#FFC2B3"></span>
+              <span class="swatch" style="--swatch:#FF6B4A"></span>
+            </div>
+            <div>
+              <h3 class="theme-name">코럴</h3>
+              <p class="theme-use">가족·복지</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="prompts-section">
+      <div class="section-head prompt-heading" data-reveal>
+        <p class="eyebrow">Ready prompts.</p>
+        <h2 class="section-title">이런 요청에 강해요</h2>
+      </div>
+
+      <div class="marquee">
+        <div class="marquee-track" data-marquee>
+          <button class="pill glass prompt-chip" type="button">가을 학교 축제</button>
+          <button class="pill glass prompt-chip" type="button">탄소중립 캠페인</button>
+          <button class="pill glass prompt-chip" type="button">교사 AI 연수</button>
+          <button class="pill glass prompt-chip" type="button">신제품 런칭 행사</button>
+          <button class="pill glass prompt-chip" type="button">진로 체험 주간</button>
+        </div>
+      </div>
+
+      <div class="marquee">
+        <div class="marquee-track marquee-reverse" data-marquee>
+          <button class="pill glass prompt-chip" type="button">지역 축제 홍보</button>
+          <button class="pill glass prompt-chip" type="button">고객 제안 워크숍</button>
+          <button class="pill glass prompt-chip" type="button">학부모 설명회</button>
+          <button class="pill glass prompt-chip" type="button">해커톤</button>
+          <button class="pill glass prompt-chip" type="button">동아리 박람회</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta mesh">
+      <div data-reveal>
+        <p class="eyebrow cta-eyebrow">Your turn.</p>
+        <h2 class="cta-title">지금, 아이디어 한 줄을<br>적어 보세요.</h2>
+        <button class="pill primary cta-button" type="button" data-chat>대화 시작하기 ↑</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span class="footer-brand">AI Creative Agent Team</span>
+    <span>Copilot Studio로 만든 멀티 에이전트</span>
+    <span>© 2026</span>
+  </footer>
+
+  <button class="pill glass floating-notice" type="button" aria-label="대화창으로 이동"></button>
+
+  <script src="https://cdn.botframework.com/botframework-webchat/4.18.0/webchat.js"></script>
+  <script>
+    // ① 등장 효과·숫자·버튼 연결
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const chatCard = document.querySelector('.chat-card');
+    const input = document.querySelector('.chat-input');
+    const sendButton = document.querySelector('.send');
+    const notice = document.querySelector('.floating-notice');
+    let cardVisible = true;
+    let resultReady = false;
+
+    function goToChat() {
+      window.scrollTo({
+        top: chatCard.getBoundingClientRect().top + window.scrollY - 88,
+        behavior: "smooth"
+      });
+      input.focus({ preventScroll: true });
+    }
+
+    document.querySelectorAll('[data-chat]').forEach(button => {
+      button.addEventListener('click', event => {
+        event.preventDefault();
+        goToChat();
+      });
+    });
+
+    document.querySelector('.new-chat').addEventListener('click', () => {
+      window.location.reload();
+    });
+
+    notice.addEventListener('click', goToChat);
+
+    document.querySelectorAll('[data-marquee]').forEach(track => {
+      const copies = [...track.children].map(chip => {
+        const copy = chip.cloneNode(true);
+        copy.tabIndex = -1;
+        copy.setAttribute('aria-hidden', 'true');
+        return copy;
+      });
+
+      track.append(...copies);
+
+      track.addEventListener('click', event => {
+        const chip = event.target.closest('.prompt-chip');
+        if (!chip) return;
+        input.value = chip.textContent.trim() + ' 기획해 줘';
+        resizeInput();
+        updateSendButton();
+        goToChat();
+      });
+    });
+
+    function countUp(element) {
+      const target = Number(element.dataset.count);
+      if (reducedMotion.matches) return;
+      const start = performance.now();
+
+      function frame(now) {
+        const progress = Math.min((now - start) / 1100, 1);
+        element.textContent = Math.round(target * (1 - Math.pow(1 - progress, 3)));
+        if (progress < 1) requestAnimationFrame(frame);
+      }
+
+      element.textContent = '0';
+      requestAnimationFrame(frame);
+    }
+
+    if ('IntersectionObserver' in window) {
+      const revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          const element = entry.target;
+          element.classList.remove('reveal-pending');
+          element.querySelectorAll('[data-count]').forEach(countUp);
+          element.classList.add('is-chart-visible');
+          revealObserver.unobserve(element);
+        });
+      }, { threshold: .12 });
+
+      document.querySelectorAll('[data-reveal]').forEach((element, index) => {
+        element.style.setProperty('--delay', (index % 5) * 80 + 'ms');
+        element.classList.add('reveal-ready');
+        if (!reducedMotion.matches) element.classList.add('reveal-pending');
+        revealObserver.observe(element);
+      });
+
+      new IntersectionObserver(entries => {
+        const rect = entries[0].boundingClientRect;
+        cardVisible = entries[0].isIntersecting && rect.bottom > 100;
+        if (cardVisible) resultReady = false;
+        updateNotice();
+      }, {
+        rootMargin: '-88px 0px 0px 0px',
+        threshold: [0,.1,.5,1]
+      }).observe(chatCard);
+    } else {
+      document.querySelectorAll('.feature-card').forEach(card => {
+        card.classList.add('is-chart-visible');
+      });
+    }
+
+    let scrollQueued = false;
+
+    window.addEventListener('scroll', () => {
+      if (scrollQueued) return;
+      scrollQueued = true;
+
+      requestAnimationFrame(() => {
+        if (!reducedMotion.matches) {
+          document.querySelector('.hero-blobs').style.setProperty(
+            '--parallax',
+            Math.min(window.scrollY * .07, 55) + 'px'
+          );
+        }
+        scrollQueued = false;
+      });
+    }, { passive: true });
+
+    // ② 대화창 동작 — 메시지는 Web Chat만 렌더링
+    let store;
+    let directLine;
+    let connectionSubscription;
+    let connecting = false;
+    let workStart = 0;
+    let workInterval;
+    const body = document.body;
+    const suggestions = document.querySelector('.suggestions');
+    const workLabel = document.querySelector('.work-label');
+
+    function resizeInput() {
+      input.style.height = 'auto';
+      input.style.height = Math.min(input.scrollHeight, 144) + 'px';
+    }
+
+    function updateSendButton() {
+      sendButton.disabled =
+        !body.classList.contains('is-connected') || !input.value.trim();
+    }
+
+    function elapsed() {
+      const seconds = Math.max(0, Math.floor((Date.now() - workStart) / 1000));
+      return Math.floor(seconds / 60) + ':' + String(seconds % 60).padStart(2, '0');
+    }
+
+    function updateNotice() {
+      const working = body.classList.contains('is-working');
+      notice.classList.toggle('is-visible', !cardVisible && (working || resultReady));
+      notice.textContent = working
+        ? '팀이 작업 중 · ' + elapsed()
+        : '결과가 도착했어요 ↑';
+    }
+
+    function updateWork() {
+      const longWait = Date.now() - workStart >= 20000;
+
+      workLabel.textContent = longWait
+        ? '팀이 작업 중 · ' + elapsed() + ' — 파일 5개를 만드느라 몇 분 걸릴 수 있어요'
+        : '팀이 작업 중 · ' + elapsed();
+
+      updateNotice();
+    }
+
+    function startWorking() {
+      workStart = Date.now();
+      resultReady = false;
+      body.classList.add('is-working');
+      clearInterval(workInterval);
+      updateWork();
+      workInterval = setInterval(updateWork, 1000);
+    }
+
+    function answerArrived() {
+      const wasWorking = body.classList.contains('is-working');
+      body.classList.remove('is-working');
+      clearInterval(workInterval);
+      if (wasWorking && !cardVisible) resultReady = true;
+      updateNotice();
+    }
+
+    function sendText(value) {
+      const text = value.trim();
+      if (!text || !store || !body.classList.contains('is-connected')) return;
+
+      const firstMessage = !body.classList.contains('is-started');
+      body.classList.add('is-started');
+      suggestions.replaceChildren();
+      input.value = '';
+      resizeInput();
+      updateSendButton();
+      startWorking();
+
+      store.dispatch({
+        type: "WEB_CHAT/SEND_MESSAGE",
+        payload: { text }
+      });
+
+      if (firstMessage) requestAnimationFrame(goToChat);
+    }
+
+    function renderSuggestions(actions) {
+      suggestions.replaceChildren();
+
+      (actions || []).forEach(action => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'pill glass suggestion';
+        button.textContent = action.title || String(action.value || '계속하기');
+
+        button.addEventListener('click', () => {
+          if (action.type === 'openUrl') {
+            try {
+              const url = new URL(action.value);
+              if (url.protocol === 'https:' || url.protocol === 'http:') {
+                window.open(url.href, '_blank', 'noopener,noreferrer');
+              }
+            } catch {
+              // 유효하지 않은 링크는 열지 않음
+            }
+          } else {
+            sendText(String(action.value ?? action.title ?? ''));
+          }
+        });
+
+        suggestions.append(button);
+      });
+    }
+
+    input.addEventListener('input', () => {
+      resizeInput();
+      updateSendButton();
+    });
+
+    input.addEventListener('keydown', event => {
+      if (
+        event.key === 'Enter' &&
+        !event.shiftKey &&
+        !event.isComposing &&
+        event.keyCode !== 229
+      ) {
+        event.preventDefault();
+        sendText(input.value);
+      }
+    });
+
+    document.querySelector('.composer').addEventListener('submit', event => {
+      event.preventDefault();
+      sendText(input.value);
+    });
+
+    document.querySelectorAll('[data-example]').forEach(button => {
+      button.disabled = true;
+      button.addEventListener('click', () => sendText(button.textContent));
+    });
+
+    function setConnected(connected) {
+      body.classList.toggle('is-connected', connected);
+      input.disabled = !connected;
+      input.placeholder = connected ? '무엇을 만들어 볼까요?' : '팀을 부르는 중…';
+
+      document.querySelector('.connection-dot').setAttribute(
+        'aria-label',
+        connected ? '연결됨' : '연결 중'
+      );
+
+      document.querySelectorAll('[data-example]').forEach(button => {
+        button.disabled = !connected;
+      });
+
+      updateSendButton();
+    }
+
+    function showError(message) {
+      body.classList.add('is-error');
+      setConnected(false);
+      document.querySelector('.error-detail').textContent = message;
+    }
+
+    document.querySelector('.retry').addEventListener('click', connect);
+
+    // ③ 원래 연결 코드 — 주소·봉인 값·simple CORS 흐름 유지
+    const BROKER_URL = "https://dl-broker-juwon-4jt3z.azurewebsites.net/api/directlineToken";
+    const SEALED = "OiSn8spgMHPMX2qtI00jfkQA6C0XUhBi8pEfUI9RwaIrJbpbvJn6dOLYOdjJdnDOAItGHpB4q4Db8IW-XD2u4d7I3CHzZRGPFJAs-6eOSZwfCrES0hcV9JJo2o7HPrSiqZo4It1Ka12Vd7NvtBrujyeQsSvFi1Z9tQXOrf7b7C16BVe3EKjCcfDk8NnDbY2kZwgzvGo7-Bdkh0c8KfOWZ50qHETOyXuuJ1yAkp2qRHrqVJPfSbyVuN1L4KImBKfndnHa4lxTsyV2Et_oBL_8l_W1ZIdyWj8UIMQg9Gz85ZdyVnI_4EX1DlVaCNIaNch354A194BAgQ_YOQ16qJZpRDUJVggQVemUTXTgRUj-iiW0N4QcLfdN2AH--AmckZL7YpTUqa5FGhOvGGUisS0r5CebzsMYku_lUOqrB27chzVqekNBiNjdv27yVMR4eo0K1grz92PhMoZYnukKzU2P48zU-852-ciH5zlDL3v76Nk0dhAD2CSYFn_oCXbN8BsJnyzGPdzcbFkQdIRkEtOq_z8Di0RS142k6nKOP6E0lavdZ9mSZB4ZkFG7eakm5S0JiXqHiHagd53NZ3ToRCjYPIt1XcSKGAPEG5UTsHs4SwGWKMPgbTHyaZv0GVN6I9u196jcvGxSBXAOdmS1f17nzQ";
+
+    async function connect() {
+      if (connecting) return;
+      connecting = true;
+      body.classList.remove('is-error');
+      setConnected(false);
+
       try {
-        // Keep this a simple CORS request; the broker may not support preflight.
-        response = await fetch(BROKER_URL, {
+        if (
+          !window.WebChat ||
+          typeof WebChat.createDirectLine !== 'function' ||
+          typeof WebChat.renderWebChat !== 'function'
+        ) {
+          throw new Error(
+            '채팅 구성 요소를 불러오지 못했습니다. 네트워크를 확인한 뒤 새로고침해 주세요.'
+          );
+        }
+
+        if (connectionSubscription) connectionSubscription.unsubscribe();
+        if (directLine) directLine.end();
+
+        // 헤더를 추가하지 않아 preflight 없는 원래 요청을 유지합니다.
+        const response = await fetch(BROKER_URL, {
           method: "POST",
           body: JSON.stringify({ sealed: SEALED })
         });
-      } catch {
-        showError("서버에 연결하지 못했습니다. 네트워크와 배포 주소를 확인해 주세요.");
-        return;
-      }
-      if (!response.ok) {
-        showError("서버가 연결 요청을 처리하지 못했습니다 (HTTP " + response.status + ").");
-        return;
-      }
 
-      let data;
-      try {
-        data = await response.json();
-      } catch {
-        showError("서버 응답을 읽을 수 없습니다. 잠시 후 다시 시도해 주세요.");
-        return;
-      }
-      if (!data || typeof data.token !== "string" || !data.token.trim()) {
-        showError("서버에서 연결 토큰을 받지 못했습니다. 암호와 배포 주소를 확인해 주세요.");
-        return;
-      }
+        if (!response.ok) {
+          throw new Error(
+            '서버가 연결 요청을 처리하지 못했습니다 (HTTP ' + response.status + ').'
+          );
+        }
 
-      try {
-        const directLine = WebChat.createDirectLine({ token: data.token });
-        status.hidden = true;
-        directLine.postActivity({
-          type: "event", name: "startConversation", from: { id: "user" }
-        }).subscribe({
-          error: () => showError("첫 인사를 요청하지 못했습니다. 채팅창에 메시지를 입력해 주세요.")
+        const data = await response.json();
+
+        if (!data || typeof data.token !== 'string' || !data.token.trim()) {
+          throw new Error('서버에서 연결 토큰을 받지 못했습니다.');
+        }
+
+        directLine = WebChat.createDirectLine({ token: data.token });
+
+        store = WebChat.createStore({}, () => next => action => {
+          const result = next(action);
+
+          if (action.type === 'DIRECT_LINE/CONNECT_FULFILLED') {
+            body.classList.remove('is-error');
+            setConnected(true);
+          }
+
+          if (action.type === 'DIRECT_LINE/INCOMING_ACTIVITY') {
+            const activity = action.payload && action.payload.activity;
+
+            if (
+              activity &&
+              activity.from &&
+              activity.from.role !== 'user' &&
+              activity.type === 'message'
+            ) {
+              answerArrived();
+              renderSuggestions(
+                activity.suggestedActions && activity.suggestedActions.actions
+              );
+            }
+          }
+
+          return result;
         });
-        WebChat.renderWebChat({ directLine, locale: "ko-KR" }, document.getElementById("webchat"));
-      } catch {
-        showError("채팅을 시작하지 못했습니다. 새로고침 후 다시 시도해 주세요.");
+
+        directLine.postActivity({
+          type: "event",
+          name: "startConversation",
+          from: { id: "user" }
+        }).subscribe({
+          error: error => showError(
+            error && error.message ||
+            '첫 인사를 요청하지 못했습니다. 다시 시도해 주세요.'
+          )
+        });
+
+        const styleOptions = {
+          hideSendBox: true,
+          rootHeight: "100%",
+          backgroundColor: "transparent",
+          primaryFont: "'Pretendard Variable', -apple-system, sans-serif",
+          bubbleBackground: "transparent",
+          bubbleBorderWidth: 0,
+          bubbleMaxWidth: 720,
+          bubbleMinWidth: 0,
+          bubbleFromUserBackground: "linear-gradient(135deg, #EEF0FF, #FBEFFF)",
+          bubbleFromUserBorderWidth: 0,
+          bubbleFromUserBorderRadius: 20,
+          botAvatarInitials: '',
+          userAvatarInitials: '',
+          avatarSize: 0,
+          showAvatarInGroup: false,
+          hideUploadButton: true,
+          fontSizeSmall: '10px',
+          fontSizeMedium: '13px',
+          paddingRegular: 12,
+          bubbleTextColor: '#363147',
+          bubbleFromUserTextColor: '#48405f',
+          bubbleFromUserNubSize: 0,
+          bubbleNubSize: 0
+        };
+
+        WebChat.renderWebChat({
+          directLine,
+          store,
+          styleOptions,
+          locale: "ko-KR"
+        }, document.getElementById("webchat"));
+
+        connectionSubscription = directLine.connectionStatus$.subscribe(connectionStatus => {
+          if (
+            connectionStatus === 3 ||
+            connectionStatus === 4 ||
+            connectionStatus === 5
+          ) {
+            showError(
+              'Direct Line 연결이 종료되었거나 연결할 수 없습니다 (상태 ' +
+              connectionStatus + ').'
+            );
+          }
+        });
+      } catch (error) {
+        showError(error && error.message ? error.message : String(error));
+      } finally {
+        connecting = false;
       }
     }
 
